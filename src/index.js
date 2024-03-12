@@ -14,6 +14,9 @@ const io = new Server(server);
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
+const cors = require("cors")
+app.use(cors())
+
 app.post('/book-chat-room', async (req, res) => {
     try {
         await connectDB();
