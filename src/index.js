@@ -14,27 +14,35 @@ const io = new Server(server);
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
-app.post('/book', async (req, res) => {
+app.post('/book-chat-room', async (req, res) => {
     try {
         await connectDB();
         await bookModel.create(req.body);
     } catch (error) {
         console.log(`ERROR : ${error.message}`)
-        return res.status(400).json({ message: "Failure : Create a book chat room." })
+        return res.status(400).json({ message: "FAILURE : Create a book chat room." })
     }
 
-    return res.status(200).json({ message: "Success: Create a book chat room." })
+    return res.status(200).json({ message: "SUCCESS: Create a book chat room." })
 });
 
-app.get('/book/:id', (req, res) => {
+app.get('/book-chat-room/:id', (req, res) => {
     return res.status(200).json("get")
 })
 
-app.get('/booklist', (req, res) => {
-    return res.status(200).json("get list")
+app.get('/book-chat-room-list', async (req, res) => {
+    let bookList;
+    try {
+        await connectDB()
+        bookList = await bookModel.find()
+    } catch (error) {
+        console.log(`ERROR : ${error.message}`)
+        return res.status(400).json({ message: "FAILURE : Get book chat room list." })
+    }
+    return res.status(200).json({ message: "SUCCESS: Get book chat room list.", bookChatRoomList: bookList })
 })
 
-app.delete('/book/:id', (req, res) => {
+app.delete('/book-chat-room/:id', (req, res) => {
     return res.status(200).json("delete")
 })
 
