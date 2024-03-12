@@ -75,7 +75,8 @@ io.on('connection', function (socket) {
     socket.on('login', (msg) => {
         room = msg.room;
         socket.join(room);
-        io.to(room).emit('login', msg);
+        name = msg.name;
+        io.to(room).emit('login', { message: `${name}さんが入室しました。` });
     })
     socket.on('message', (msg) => {
         io.to(room).emit('message', msg);
