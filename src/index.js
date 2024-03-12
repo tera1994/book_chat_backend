@@ -9,7 +9,12 @@ const port = '5000';
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+    cors: {
+        origin: "http://localhost:3000",
+        methods: ["GET", "POST"]
+    }
+});
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
@@ -79,14 +84,14 @@ io.on('connection', function (socket) {
         room = msg.room;
         socket.join(room);
         name = msg.name;
-        io.to(room).emit('login', { message: `${name}さんが入室しました。` });
+        io.to(room).emit('message', { socketId: `${socket.id}`, name: `${name}`, message: `${name}さんが入室しました。` });
     })
     socket.on('message', (msg) => {
         io.to(room).emit('message', msg);
     });
 
     socket.on('disconnect', () => {
-        io.to(room).emit('disconnect', { message: `${name}さんが退出しました。` })
+        io.to(room).emit('message', { socketId: `${socket.id}`, name: `${name}`, message: `${name}さんが退出しました。` })
     })
 });
 
