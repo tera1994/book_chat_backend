@@ -50,8 +50,15 @@ app.get('/book-chat-room-list', async (req, res) => {
     return res.status(200).json({ message: "SUCCESS: Get book chat room list.", bookChatRoomList: bookList })
 })
 
-app.delete('/book-chat-room/:id', (req, res) => {
-    return res.status(200).json("delete")
+app.delete('/book-chat-room/:id', async (req, res) => {
+    try {
+        await connectDB()
+        await bookModel.deleteOne({ _id: req.params.id })
+    } catch (error) {
+        console.log(`ERROR : ${error.message}`)
+        return res.status(400).json({ message: "FAILURE : Delete the book chat room." })
+    }
+    return res.status(200).json({ message: "SUCCESS: Delete the book chat room." })
 })
 
 server.listen(port, () => {
