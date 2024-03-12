@@ -19,10 +19,11 @@ app.post('/book', async (req, res) => {
         await connectDB();
         await bookModel.create(req.body);
     } catch (error) {
-        return res.status(400).json({ message: `Error : ${error.message}` })
+        console.log(`ERROR : ${error.message}`)
+        return res.status(400).json({ message: "Failure : Create a book chat room." })
     }
 
-    return res.status(200).json({ message: "Success: Create book chat room." })
+    return res.status(200).json({ message: "Success: Create a book chat room." })
 });
 
 app.get('/book/:id', (req, res) => {
