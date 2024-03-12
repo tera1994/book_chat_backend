@@ -26,8 +26,16 @@ app.post('/book-chat-room', async (req, res) => {
     return res.status(200).json({ message: "SUCCESS: Create a book chat room." })
 });
 
-app.get('/book-chat-room/:id', (req, res) => {
-    return res.status(200).json("get")
+app.get('/book-chat-room/:id', async (req, res) => {
+    let book;
+    try {
+        await connectDB()
+        book = await bookModel.findById(req.params.id)
+    } catch (error) {
+        console.log(`ERROR : ${error.message}`)
+        return res.status(400).json({ message: "FAILURE : Get the book chat room." })
+    }
+    return res.status(200).json({ message: "SUCCESS: Get the book chat room.", bookChatRoom: book })
 })
 
 app.get('/book-chat-room-list', async (req, res) => {
