@@ -61,6 +61,31 @@ app.delete('/book-chat-room/:id', async (req, res) => {
     return res.status(200).json({ message: "SUCCESS: Delete the book chat room." })
 })
 
+app.get('/', function (req, res) {
+    res.sendFile(__dirname + '/index.html');
+});
+
+io.on('connection', function (socket) {
+
+    let room = '';
+    let name = '';
+
+    io.to(socket.id).emit('connectid', { socketId: socket.id })
+
+    socket.on('login', (msg) => {
+        room = msg.room;
+        socket.join(room);
+        io.to(room).emit('login', msg);
+    })
+    socket.on('message', (msg) => {
+        io.to(room).emit('message', msg);
+    });
+
+    socket.on('disconnect', () => {
+        io.to(room).emit('disconnect', { message: `${name}さんが退出しました。` })
+    })
+});
+
 server.listen(port, () => {
     console.log(`listening on port:${port}`);
 });
