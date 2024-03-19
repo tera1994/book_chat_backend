@@ -11,7 +11,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "https://book-chat.netlify.app/",
     methods: ["GET", "POST"],
   },
 });
@@ -63,12 +63,10 @@ app.get("/book-chat-room-list", async (req, res) => {
       .status(400)
       .json({ message: "FAILURE : Get book chat room list." });
   }
-  return res
-    .status(200)
-    .json({
-      message: "SUCCESS: Get book chat room list.",
-      bookChatRoomList: bookList,
-    });
+  return res.status(200).json({
+    message: "SUCCESS: Get book chat room list.",
+    bookChatRoomList: bookList,
+  });
 });
 
 app.delete("/book-chat-room/:id", async (req, res) => {
